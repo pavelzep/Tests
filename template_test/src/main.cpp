@@ -5,15 +5,7 @@
 #include <set>
 #include <deque>
 
-
 using namespace std;
-
-// шаблон пара
-template <typename T, typename U>
-struct Pair {
-    T first;
-    U second;
-};
 
 // шаблон IteratorRange
 template<typename Iterator>
@@ -25,7 +17,6 @@ public:
     IteratorRange(Iterator f, Iterator l)
         : first(f)
         , last(l) {
-
     }
 
     Iterator begin() const {
@@ -37,9 +28,11 @@ public:
     }
 };
 
-
+// функция вынуждает компилятор посмотреть тип возвращаемого значения.
+// найти подхощдящий конструктор, посмотреть тип,
+// и подставить этот тип в auto в сигнатуре функции 
 template <typename Container>
-IteratorRange<typename Container::iterator> Head(Container& v, size_t top) {
+auto Head(Container& v, size_t top) {
     return IteratorRange{
         v.begin(), next(v.begin(), min(top,v.size()))
     };
@@ -59,24 +52,16 @@ IteratorRange<Iterator> MakeRange(Iterator begin, Iterator end) {
 
 int main() {
     {
-        Pair <string, int> si;
-        si.first = "Hello";
-        si.second = 5;
-
-        Pair <bool, char> bc;
-        bc.first = true;
-        bc.second = 'z';
+        vector<int> v = { 1,2,3,4,5 };
+        for (int x : Head(v, 3)) {
+            cout << x << " ";
+        }
+        cout << endl;
+        cout << RangeSize(Head(v, 3));
+        cout << endl;
     }
-
-    vector<int> v = { 1,2,3,4,5 };
-    for (int x : Head(v, 3)) {
-        cout << x << " ";
-    }
-    cout << endl;
-    cout << RangeSize(Head(v, 3));
-    cout << endl;
-
     {
+        vector<int> v = { 1,2,3,4,5 };
         auto second_half = MakeRange(v.begin() + v.size() / 2, v.end());
         for (auto x : second_half) {
             cout << x << ' ';
@@ -84,6 +69,7 @@ int main() {
         cout << endl;
     }
     {
+        vector<int> v = { 1,2,3,4,5 };
         IteratorRange second_half(v.begin() + v.size() / 2, v.end());
         for (auto x : second_half) {
             cout << x << ' ';
