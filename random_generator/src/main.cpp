@@ -8,15 +8,26 @@ using namespace std;
 
 
 
-//длинна слова
+
+
+#define FIRST_CHAR 97 // 'a'
+#define LAST_CHAR 122 // 'z'
+
 #define MIN_WORD_LENTH 1
 #define MAX_WORD_LENTH 100
 #define WORD_COUNT 10000
-#define FIRST_CHAR 97 // 'a'
-#define LAST_CHAR 122 // 'z'
+
+#define MIN_WORD_NUMBER 1
+#define MAX_WORD_NUMBER WORD_COUNT
+
 #define MIN_DOC_SIZE 1
-#define MAX_DOC_SIZE 1000
+#define MAX_DOC_SIZE 50
 #define DOC_COUNT 50000
+
+#define MIN_QUERY_SIZE 1
+#define MAX_QUERY_SIZE 10
+#define QUERY_COUNT 50000 
+
 vector<char> chars = { 'a','b' };
 
 
@@ -26,37 +37,68 @@ vector<char> chars = { 'a','b' };
 
 
 int main() {
+
+
     random_device random_device;
     mt19937 generator(random_device());
-    uniform_int_distribution<> word_lenth(MIN_WORD_LENTH, MAX_WORD_LENTH);
-    uniform_int_distribution<> char_generator(FIRST_CHAR, LAST_CHAR);
-    uniform_int_distribution<> doc_size_generator(MIN_DOC_SIZE, MAX_DOC_SIZE);
-    stringstream word;
+    uniform_int_distribution<> generator_word_lenth(MIN_WORD_LENTH, MAX_WORD_LENTH);
+    uniform_int_distribution<> generator_char(FIRST_CHAR, LAST_CHAR);
+    uniform_int_distribution<> generator_doc_size(MIN_DOC_SIZE, MAX_DOC_SIZE);
+    uniform_int_distribution<> generator_query_size(MIN_QUERY_SIZE, MAX_QUERY_SIZE);
+    uniform_int_distribution<> generator_word_number(MIN_WORD_NUMBER, MAX_WORD_NUMBER);
 
-    ofstream output("output.txt");
+    ofstream output1("docs.txt");
+    ofstream output2("queries.txt");
 
-    //генерируем 10000 слов
+    // генерируем 10000 слов
     int word_count = WORD_COUNT;
     vector<string> words;
     words.reserve(10000);
-    while (word_count) { //генерируем документ
-        int current_word_lenth = word_lenth(generator);
+    while (word_count) {
+        int current_word_lenth = generator_word_lenth(generator);
+        stringstream ss_word;
         while (current_word_lenth) { // генерируем слово
-            char ch = char_generator(generator);
-            word << ch;
+            char ch = generator_char(generator);
+            ss_word << ch;
             --current_word_lenth;
         }
-        words.push_back(word.str());
+        words.push_back(ss_word.str());
         --word_count;
     }
 
+    // генерируем документы 
+    int doc_count = DOC_COUNT;
+    stringstream ss_docs;
+    while (doc_count) {
+        stringstream ss_doc;
+        int doc_size = generator_doc_size(generator);
+        while (doc_size) { //генерируем 1 документ
+            int word_number = generator_word_number(generator) - 1;
+            ss_doc << words[word_number] << ' ';
+            --doc_size;
+        }
+        ss_docs << ss_doc.str() << '\n';
+        --doc_count;
+    }
+    output1 << ss_docs.str();
 
 
-    // int doc_count = DOC_COUNT;
-    // while (doc_count) {
+    // генерируем запросы
+    int query_count = QUERY_COUNT;
+    stringstream ss_queries;
+    while (query_count) {
+        stringstream ss_query;
+        int doc_size = generator_query_size(generator);
+        while (doc_size) { //генерируем 1 запрос
+            int word_number = generator_word_number(generator) - 1;
+            ss_query << words[word_number] << ' ';
+            --doc_size;
+        }
+        ss_queries << ss_query.str() << '\n';
+        --query_count;
+    }
+    output2 << ss_queries.str();
 
-    //     --doc_count;
-    // }
 
     return 0;
 }
