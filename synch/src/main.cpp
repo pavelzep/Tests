@@ -85,14 +85,15 @@ struct Account {
     Account(int value) {
         balance.GetAccess().ref_to_value = value;
     }
-    
-    bool Spend(int value) {
 
-        if (value <= balance.GetAccess().ref_to_value) {
-            balance.GetAccess().ref_to_value -= value;
+    bool Spend(int value) {
+        auto access = balance.GetAccess();
+        if (value <= access.ref_to_value) {
+            access.ref_to_value -= value;
             return true;
         }
         return false;
+
     };
 private:
     Synchronized<int> balance;
@@ -107,6 +108,7 @@ int SpendMoney(Account& account) {
     }
     return total_spent;
 }
+
 
 int main() {
     Account family_account{ 100000 };
