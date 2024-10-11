@@ -25,7 +25,7 @@ public:
 #define COUNT 999999
 
 int main() {
-        {
+    {
         simpleConstr = 0;
         copyConstr = 0;
         moveConstr = 0;
@@ -39,7 +39,7 @@ int main() {
             << copyConstr << ' '
             << moveConstr << endl;
     }
-        {
+    {
         simpleConstr = 0;
         copyConstr = 0;
         moveConstr = 0;
@@ -124,7 +124,7 @@ int main() {
             << moveConstr << endl;
     }
 
-        {
+    {
         simpleConstr = 0;
         copyConstr = 0;
         moveConstr = 0;
